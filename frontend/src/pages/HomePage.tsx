@@ -87,7 +87,7 @@ export const HomePage: React.FC = () => {
                 type="submit"
                 className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors shadow-md shrink-0"
               >
-                Search Policies
+                {t.searchPolicies}
               </button>
             </div>
           </form>
@@ -96,19 +96,19 @@ export const HomePage: React.FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 max-w-4xl mx-auto text-left">
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
               <div className="text-2xl font-black text-amber-400">4+</div>
-              <div className="text-xs text-slate-400 font-medium">Municipal Policies</div>
+              <div className="text-xs text-slate-400 font-medium">{t.municipalPolicies}</div>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
               <div className="text-2xl font-black text-emerald-400">100%</div>
-              <div className="text-xs text-slate-400 font-medium">Grounded Citations</div>
+              <div className="text-xs text-slate-400 font-medium">{t.groundedCitations}</div>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
               <div className="text-2xl font-black text-blue-400">6 Wards</div>
-              <div className="text-xs text-slate-400 font-medium">GIS Mapped Zones</div>
+              <div className="text-xs text-slate-400 font-medium">{t.gisMappedZones}</div>
             </div>
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
               <div className="text-2xl font-black text-purple-400">100 Credits</div>
-              <div className="text-xs text-slate-400 font-medium">Quadratic Voting Arena</div>
+              <div className="text-xs text-slate-400 font-medium">{t.quadraticVotingArena}</div>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export const HomePage: React.FC = () => {
                 </span>
               </div>
               <p className="text-xs text-slate-600 mt-1">
-                Showing policy impact analysis for <strong>{selectedWardName}</strong> and surrounding municipal sectors.
+                {t.showingImpactFor} <strong>{selectedWardName}</strong>
               </p>
             </div>
           </div>
@@ -154,7 +154,7 @@ export const HomePage: React.FC = () => {
               to="/for-you"
               className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700 transition-colors shrink-0 shadow-sm flex items-center gap-1"
             >
-              <span>Personalized View</span>
+              <span>{t.personalizedView}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -171,7 +171,7 @@ export const HomePage: React.FC = () => {
                 </h2>
               </div>
               <Link to="/alerts" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
-                View Deadlines <ChevronRight className="w-3.5 h-3.5" />
+                {t.viewDeadlines} <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
@@ -186,7 +186,7 @@ export const HomePage: React.FC = () => {
                       <span>{pol.code}</span>
                       <span className="flex items-center gap-1 text-amber-700">
                         <Clock className="w-3.5 h-3.5" />
-                        Deadline: {pol.consultation_deadline}
+                        {t.deadline}: {pol.consultation_deadline}
                       </span>
                     </div>
                     <h3 className="text-sm font-bold text-slate-900">
@@ -202,14 +202,14 @@ export const HomePage: React.FC = () => {
                       to={`/citizen-response?policy_id=${pol.id}`}
                       className="font-bold text-amber-900 hover:text-amber-950 flex items-center gap-1"
                     >
-                      <span>Draft Public Comment</span>
+                      <span>{t.draftPublicComment}</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
                     <Link
                       to={`/policies/${pol.id}`}
                       className="font-bold text-blue-600 hover:underline"
                     >
-                      Read Policy →
+                      {t.readPolicy} →
                     </Link>
                   </div>
                 </div>
@@ -226,14 +226,14 @@ export const HomePage: React.FC = () => {
                 {t.recentChanges}
               </h2>
               <p className="text-xs text-slate-500">
-                Official municipal bylaws and planning notifications translated into citizen language.
+                {t.officialMunicipalBylaws}
               </p>
             </div>
             <Link
               to="/policies"
               className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
             >
-              Browse All Policies ({policies.length}) <ChevronRight className="w-3.5 h-3.5" />
+              {t.browseAll} ({policies.length}) <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -256,10 +256,10 @@ export const HomePage: React.FC = () => {
         <section className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 space-y-8 shadow-2xl">
           <div className="max-w-2xl">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              A Complete Civic AI Ecosystem
+              {t.civicAiEcosystem}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-2">
-              Combining grounded RAG retrieval, GIS ward analytics, multi-agent AI verification, and democratic voting mechanisms.
+              {t.civicAiEcosystemDesc}
             </p>
           </div>
 
@@ -272,10 +272,10 @@ export const HomePage: React.FC = () => {
                 <MessageSquare className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">
-                Grounded RAG Assistant
+                {t.groundedRagAssistant}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Ask questions and receive answers cited from exact gazette pages with verified confidence scores. Zero hallucinations.
+                {t.groundedRagDesc}
               </p>
             </Link>
 
@@ -287,10 +287,10 @@ export const HomePage: React.FC = () => {
                 <MapPin className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
-                Interactive Ward GIS Map
+                {t.interactiveWardGIS}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Explore municipal ward boundaries, transit corridors, and zoning overlays to see localized policy impact.
+                {t.interactiveWardGISDesc}
               </p>
             </Link>
 
@@ -302,10 +302,10 @@ export const HomePage: React.FC = () => {
                 <Scale className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
-                Old vs New Policy Comparison
+                {t.oldVsNewPolicy}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Compare previous vs amended clauses side-by-side with numerical delta tracking (e.g. 15m → 24m).
+                {t.oldVsNewPolicyDesc}
               </p>
             </Link>
 
@@ -317,10 +317,10 @@ export const HomePage: React.FC = () => {
                 <UserCheck className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-purple-300 transition-colors">
-                Quadratic Civic Voting
+                {t.quadraticCivicVoting}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Distribute 100 civic voting credits (Votes = floor(sqrt(credits))) across key municipal priorities.
+                {t.quadraticCivicVotingDesc}
               </p>
             </Link>
 
@@ -332,10 +332,10 @@ export const HomePage: React.FC = () => {
                 <FileText className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-rose-300 transition-colors">
-                Citizen Response Assistant
+                {t.citizenResponseAssistant2}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Generate formal, respectful public consultation feedback drafts, objections, and RTI filings.
+                {t.citizenResponseAssistant2Desc}
               </p>
             </Link>
 
@@ -347,10 +347,10 @@ export const HomePage: React.FC = () => {
                 <BarChart3 className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold text-white group-hover:text-indigo-300 transition-colors">
-                Public Sentiment Tracker
+                {t.publicSentimentTracker}
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Cast anonymous stances (Support / Oppose / Neutral) and monitor community feedback trends safely.
+                {t.publicSentimentTrackerDesc}
               </p>
             </Link>
           </div>

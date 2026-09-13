@@ -32,7 +32,7 @@ export const AskJanVaaniPage: React.FC = () => {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: "Namaskara! I am JanVaani, your grounded municipal AI assistant. Ask me anything about BBMP zoning regulations, road expansions, waste management rules, or rooftop solar mandates. Every answer is strictly verified against official gazette chunks with page citations.",
+      text: t.welcomeMessage,
       confidence: 100,
       timestamp: 'Just now'
     }
@@ -121,27 +121,27 @@ export const AskJanVaaniPage: React.FC = () => {
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 text-xs font-semibold border border-blue-400/30">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Grounded Evidence RAG Engine</span>
+              <span>{t.groundedEvidenceRag}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Ask JanVaani
+              {t.askJanVaaniTitle}
             </h1>
             <p className="text-xs sm:text-sm text-slate-300">
-              Direct questions answered exclusively from official city council records with exact citations.
+              {t.askJanVaaniDesc}
             </p>
           </div>
 
           {/* Policy Scope Dropdown */}
           <div className="bg-white/10 p-3 rounded-2xl border border-white/15 backdrop-blur-sm space-y-1.5">
             <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">
-              Filter By Policy Scope:
+              {t.filterByScope}
             </label>
             <select
               value={selectedPolicyId || ''}
               onChange={(e) => setSelectedPolicyId(e.target.value ? Number(e.target.value) : undefined)}
               className="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-semibold border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <option value="">All Municipal Policies (Broad Retrieval)</option>
+              <option value="">{t.allPoliciesBroad}</option>
               {policies.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.code}: {p.title.substring(0, 38)}...
@@ -190,7 +190,7 @@ export const AskJanVaaniPage: React.FC = () => {
                     <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold">
                       <span className="flex items-center gap-1">
                         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                        Grounded Evidence Citations:
+                        {t.groundedEvidenceCitations}
                       </span>
                       {msg.confidence !== undefined && (
                         <span className="text-emerald-700 font-bold">
@@ -211,7 +211,7 @@ export const AskJanVaaniPage: React.FC = () => {
                 {msg.sender === 'assistant' && msg.hasEvidence === false && (
                   <div className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-800 flex items-center gap-1.5">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span>Zero-hallucination policy: No unverified claims presented as facts.</span>
+                    <span>{t.zeroHallucinationPolicy}</span>
                   </div>
                 )}
 
@@ -230,7 +230,7 @@ export const AskJanVaaniPage: React.FC = () => {
               <div className="bg-slate-50 border border-slate-200 rounded-2xl rounded-tl-none p-4 text-xs text-slate-500 space-y-2">
                 <div className="flex items-center gap-2 font-semibold text-blue-600">
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  <span>Searching vector database & synthesizing grounded evidence...</span>
+                  <span>{t.searchingDatabase}</span>
                 </div>
               </div>
             </div>
@@ -241,7 +241,7 @@ export const AskJanVaaniPage: React.FC = () => {
         {/* Query Suggestions */}
         <div className="px-6 py-2 bg-slate-50 border-t border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0">
-            Suggestions:
+            {t.suggestions}
           </span>
           {sampleQuestions.slice(0, 3).map((sq, idx) => (
             <button
@@ -266,7 +266,7 @@ export const AskJanVaaniPage: React.FC = () => {
             type="text"
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
-            placeholder="Ask a question about municipal policies, zoning rules, or deadlines..."
+            placeholder={t.askMunicipalQuestion}
             className="flex-1 px-4 py-3 text-xs rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium placeholder:text-slate-400"
           />
           <button

@@ -17,18 +17,16 @@ export const QuadraticVotingPage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const VOTE_COSTS = [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100];
-
   useEffect(() => {
     const loadTopics = async () => {
       setLoading(true);
       try {
-        const data = await api.getQuadraticTopics(sessionToken);
-        setVotingState(data);
-        
-        // Initial state
+        const res = await api.getQuadraticTopics(sessionToken);
+        setVotingState(res);
+
+        // Pre-populate user existing allocations
         const initialAlloc: Record<number, number> = {};
-        data.topics?.forEach((topic: QuadraticTopic) => {
+        res.topics.forEach((topic: QuadraticTopic) => {
           initialAlloc[topic.id] = topic.user_credits_spent || 0;
         });
         setAllocations(initialAlloc);
@@ -41,22 +39,21 @@ export const QuadraticVotingPage: React.FC = () => {
     loadTopics();
   }, [sessionToken]);
 
+  // Calculate current total credits used
   const totalCreditsUsed = Object.values(allocations).reduce((a, b) => a + b, 0);
-  const creditsRemaining = Math.max(0, 100 - totalCreditsUsed);
+  const creditsRemaining = 100 - totalCreditsUsed;
 
-  const getVotesForCredits = (credits: number) => {
-    return Math.floor(Math.sqrt(credits));
-  };
+  // Votes awarded = floor(sqrt(credits))
+  const getVotesForCredits = (credits: number) => Math.floor(Math.sqrt(credits));
 
   const handleAdjustVotes = (topicId: number, currentCredits: number, direction: 'up' | 'down') => {
     const currentVotes = getVotesForCredits(currentCredits);
     const targetVotes = direction === 'up' ? currentVotes + 1 : Math.max(0, currentVotes - 1);
     const targetCost = targetVotes * targetVotes;
-    const costDifference = targetCost - currentCredits;
+    const additionalCost = targetCost - currentCredits;
 
-    if (direction === 'up' && costDifference > creditsRemaining) {
-      alert("Not enough credits remaining. Adjust other topics to free up credits!");
-      return;
+    if (direction === 'up' && creditsRemaining < additionalCost) {
+      return; // Not enough credits
     }
 
     setAllocations(prev => ({
@@ -67,7 +64,7 @@ export const QuadraticVotingPage: React.FC = () => {
 
   const handleReset = () => {
     const resetAlloc: Record<number, number> = {};
-    votingState?.topics.forEach(t => resetAlloc[t.id] = 0);
+    votingState?.topics.forEach((t: QuadraticTopic) => resetAlloc[t.id] = 0);
     setAllocations(resetAlloc);
   };
 
@@ -96,7 +93,7 @@ export const QuadraticVotingPage: React.FC = () => {
         origin: { y: 0.6 }
       });
 
-      setSuccessMessage("Your quadratic votes were successfully recorded in the municipal civic ledger!");
+      setSuccessMessage(t.votesCast);
       
       // Refresh topics to get updated community totals
       const updated = await api.getQuadraticTopics(sessionToken);
@@ -108,7 +105,7 @@ export const QuadraticVotingPage: React.FC = () => {
     }
   };
 
-  const chartData = votingState?.topics.map(t => ({
+  const chartData = votingState?.topics.map((t: QuadraticTopic) => ({
     name: t.title.substring(0, 26) + '...',
     fullTitle: t.title,
     votes: t.total_votes_cast,
@@ -121,14 +118,13 @@ export const QuadraticVotingPage: React.FC = () => {
       <div className="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-200 text-xs font-semibold border border-purple-400/30">
           <UserCheck className="w-3.5 h-3.5 text-amber-400" />
-          <span>Democratic Participation Mechanism</span>
+          <span>{t.democraticPriorityEngine}</span>
         </div>
         <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-          Quadratic Civic Voting Arena
+          {t.quadraticVotingTitle}
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-3xl">
-          Quadratic voting allows you to express the <em>intensity</em> of your preference. 
-          Cost of votes increases quadratically (Cost = Votes²). You have 100 civic credits.
+          {t.quadraticVotingDesc}
         </p>
       </div>
 
@@ -138,21 +134,21 @@ export const QuadraticVotingPage: React.FC = () => {
           <div className="flex items-center gap-6">
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Total Budget
+                {t.civicVotingCredits}
               </span>
-              <span className="text-xl font-black text-slate-900">100 Credits</span>
+              <span className="text-xl font-black text-slate-900">100 {t.votingCredits}</span>
             </div>
             <div className="h-8 w-px bg-slate-200"></div>
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Credits Used
+                {t.creditsUsed}
               </span>
               <span className="text-xl font-black text-purple-600">{totalCreditsUsed}</span>
             </div>
             <div className="h-8 w-px bg-slate-200"></div>
             <div>
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                Credits Remaining
+                {t.creditsRemaining}
               </span>
               <span className={`text-xl font-black ${creditsRemaining > 0 ? 'text-emerald-600' : 'text-slate-500'}`}>
                 {creditsRemaining}
@@ -173,7 +169,7 @@ export const QuadraticVotingPage: React.FC = () => {
               disabled={saving}
               className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-md"
             >
-              {saving ? 'Recording Votes...' : 'Confirm & Cast Votes'}
+              {saving ? t.castingVotes : t.confirmCast}
             </button>
           </div>
         </div>

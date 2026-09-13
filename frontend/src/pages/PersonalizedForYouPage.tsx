@@ -23,7 +23,7 @@ export const PersonalizedForYouPage: React.FC = () => {
   const { 
     selectedWardNumber, setSelectedWardNumber, 
     selectedWardName, setSelectedWardName,
-    userInterests, toggleInterest, language
+    userInterests, toggleInterest, language, t
   } = useApp();
 
   const [wards, setWards] = useState<Ward[]>(STATIC_WARDS);
@@ -31,11 +31,11 @@ export const PersonalizedForYouPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   const availableInterests = [
-    { id: 'Zoning & Planning', label: 'Housing & Zoning Regulations' },
-    { id: 'Transport & Mobility', label: 'Traffic, Roads & Public Transit' },
-    { id: 'Environment & Waste', label: 'Waste Segregation & Sanitation' },
-    { id: 'Environment & Energy', label: 'Rooftop Solar & Clean Energy' },
-    { id: 'Taxation & Finance', label: 'Property Tax & Betterment Levies' },
+    { id: 'Zoning & Planning', label: t.housingZoning },
+    { id: 'Transport & Mobility', label: t.trafficRoads },
+    { id: 'Environment & Waste', label: t.wasteSegregation },
+    { id: 'Environment & Energy', label: t.rooftopSolar },
+    { id: 'Taxation & Finance', label: t.propertyTax },
   ];
 
   useEffect(() => {
@@ -79,13 +79,13 @@ export const PersonalizedForYouPage: React.FC = () => {
       <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 text-xs font-semibold border border-blue-400/30">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Personalized Civic Engine</span>
+          <span>{t.personalizedCivicEngine}</span>
         </div>
         <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-          Your Personalized Policy Feed
+          {t.yourPolicyFeed}
         </h1>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-          Instead of wading through hundreds of pages of municipal gazettes, JanVaani matches policies directly to your neighborhood and citizen interests.
+          {t.yourPolicyFeedDesc}
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export const PersonalizedForYouPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <Sliders className="w-5 h-5 text-blue-600" />
           <h2 className="text-base font-bold text-slate-900">
-            Citizen Preferences & Location Profile
+            {t.citizenPreferences}
           </h2>
         </div>
 
@@ -102,7 +102,7 @@ export const PersonalizedForYouPage: React.FC = () => {
           {/* Location / Ward */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-              1. Your Selected Ward / Locality
+              {t.yourSelectedWard}
             </label>
             <div className="relative">
               <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -119,14 +119,14 @@ export const PersonalizedForYouPage: React.FC = () => {
               </select>
             </div>
             <p className="text-[11px] text-slate-500">
-              Matched locality: <strong>{selectedWardName}</strong> (Bengaluru)
+              {t.matchedLocality}: <strong>{selectedWardName}</strong> (Bengaluru)
             </p>
           </div>
 
           {/* Interests Checklist */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-              2. Your Civic Interest Areas
+              {t.yourCivicInterests}
             </label>
             <div className="grid grid-cols-1 gap-1.5 max-h-44 overflow-y-auto pr-1">
               {availableInterests.map((interest) => {
@@ -163,10 +163,10 @@ export const PersonalizedForYouPage: React.FC = () => {
           </div>
           <div>
             <h3 className="text-sm font-extrabold text-emerald-950">
-              {relevantPolicies.length} new municipal policies directly affect your selected area and interests.
+              {relevantPolicies.length} {t.newPoliciesAffect}
             </h3>
             <p className="text-xs text-emerald-800">
-              Filtered for {selectedWardName} • Showing high-relevance decisions.
+              {t.filteredFor} {selectedWardName} • Showing high-relevance decisions.
             </p>
           </div>
         </div>
@@ -175,7 +175,7 @@ export const PersonalizedForYouPage: React.FC = () => {
           to="/map"
           className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-colors shrink-0 shadow-sm"
         >
-          View on GIS Map
+          {t.viewOnMap}
         </Link>
       </div>
 
@@ -183,10 +183,10 @@ export const PersonalizedForYouPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-slate-900">
-            Your Tailored Policy Impact Stream
+            {t.tailoredPolicyStream}
           </h3>
           <span className="text-xs text-slate-500">
-            Showing <strong>{relevantPolicies.length}</strong> prioritized policies
+            {t.showingPolicies}: <strong>{relevantPolicies.length}</strong>
           </span>
         </div>
 
@@ -198,12 +198,12 @@ export const PersonalizedForYouPage: React.FC = () => {
           </div>
         ) : relevantPolicies.length === 0 ? (
           <div className="p-12 bg-white rounded-3xl border text-center text-xs text-slate-500 space-y-2">
-            <p>No policies match your selected interest filters.</p>
+            <p>{t.noMatchingPolicies}</p>
             <button
               onClick={() => toggleInterest('Zoning & Planning')}
               className="text-blue-600 font-bold hover:underline"
             >
-              Reset Interest Filters
+              {t.resetInterestFilters}
             </button>
           </div>
         ) : (
