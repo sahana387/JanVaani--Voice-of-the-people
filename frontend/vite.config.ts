@@ -1,6 +1,14 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 1000, // raises the limit to 1000 kB (default is 500 kB)
+  },
+})
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
