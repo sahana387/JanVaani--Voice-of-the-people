@@ -5,13 +5,8 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   build: {
-    chunkSizeWarningLimit: 1000, // raises the limit to 1000 kB (default is 500 kB)
+    chunkSizeWarningLimit: 1000, // raises the limit to 1000 kB
   },
-})
-
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
   server: {
     proxy: {
       '/api': {
