@@ -60,7 +60,7 @@ export interface ChatResponse {
 }
 
 export interface Ward {
-  id: number;
+  id?: number;
   ward_number: number;
   name: string;
   zone: string;

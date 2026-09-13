@@ -9,6 +9,16 @@ import {
   ArrowRight, ShieldCheck, Zap, Sliders, Bell
 } from 'lucide-react';
 
+// Static fallback so dropdown always has options immediately
+const STATIC_WARDS: Ward[] = [
+  { ward_number: 80,  name: "Indiranagar",  zone: "East",         city: "Bengaluru", pin_codes: "560038", population: 62000,  area_sq_km: 4.2,  center: [12.9784, 77.6408] },
+  { ward_number: 151, name: "Koramangala", zone: "South",        city: "Bengaluru", pin_codes: "560034", population: 78000,  area_sq_km: 5.1,  center: [12.9352, 77.6245] },
+  { ward_number: 174, name: "HSR Layout",  zone: "Bommanahalli", city: "Bengaluru", pin_codes: "560102", population: 85000,  area_sq_km: 6.8,  center: [12.9121, 77.6446] },
+  { ward_number: 84,  name: "Whitefield",  zone: "Mahadevapura", city: "Bengaluru", pin_codes: "560066", population: 115000, area_sq_km: 12.4, center: [12.9698, 77.7500] },
+  { ward_number: 45,  name: "Malleshwaram",zone: "West",         city: "Bengaluru", pin_codes: "560003", population: 54000,  area_sq_km: 3.8,  center: [13.0031, 77.5643] },
+  { ward_number: 168, name: "Jayanagar",   zone: "South",        city: "Bengaluru", pin_codes: "560011", population: 69000,  area_sq_km: 4.6,  center: [12.9308, 77.5838] },
+];
+
 export const PersonalizedForYouPage: React.FC = () => {
   const { 
     selectedWardNumber, setSelectedWardNumber, 
@@ -16,7 +26,7 @@ export const PersonalizedForYouPage: React.FC = () => {
     userInterests, toggleInterest, language
   } = useApp();
 
-  const [wards, setWards] = useState<Ward[]>([]);
+  const [wards, setWards] = useState<Ward[]>(STATIC_WARDS);
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,6 +39,7 @@ export const PersonalizedForYouPage: React.FC = () => {
   ];
 
   useEffect(() => {
+    const controller = new AbortController();
     const loadInitial = async () => {
       setLoading(true);
       try {
@@ -36,15 +47,18 @@ export const PersonalizedForYouPage: React.FC = () => {
           api.getWards(),
           api.getPolicies({ lang: language })
         ]);
-        setWards(wRes.wards || []);
-        setPolicies(pRes.policies || []);
+        if (!controller.signal.aborted) {
+          setWards(wRes.wards || STATIC_WARDS);
+          setPolicies(pRes.policies || []);
+        }
       } catch (err) {
-        console.error("Failed to load personalized data", err);
+        console.log("Using static ward data (API fallback)");
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
     loadInitial();
+    return () => controller.abort();
   }, [language]);
 
   const handleWardChange = (wardNum: number) => {
