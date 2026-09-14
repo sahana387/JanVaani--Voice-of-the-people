@@ -7,7 +7,7 @@ import { PolicyCard } from '../components/PolicyCard';
 import { Search, Filter, SlidersHorizontal, Building2, CheckCircle2, RotateCcw } from 'lucide-react';
 
 export const PoliciesPage: React.FC = () => {
-  const { language } = useApp();
+  const { language, t } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
@@ -19,10 +19,19 @@ export const PoliciesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
 
   const categories = [
-    'All', 'Zoning & Planning', 'Transport & Mobility', 'Environment & Waste', 'Environment & Energy'
+    { id: 'All', label: t.allCategories },
+    { id: 'Zoning & Planning', label: t.housingZoning },
+    { id: 'Transport & Mobility', label: t.trafficRoads },
+    { id: 'Environment & Waste', label: t.wasteSegregation },
+    { id: 'Environment & Energy', label: t.rooftopSolar },
   ];
 
-  const statuses = ['All', 'Public Consultation', 'Active', 'Enacted'];
+  const statuses = [
+    { id: 'All', label: t.allStatuses },
+    { id: 'Public Consultation', label: t.activeConsultations },
+    { id: 'Active', label: 'Active' },
+    { id: 'Enacted', label: 'Enacted' }
+  ];
 
   useEffect(() => {
     const loadWards = async () => {
@@ -71,13 +80,13 @@ export const PoliciesPage: React.FC = () => {
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-wider">
           <Building2 className="w-4 h-4" />
-          <span>Municipal Transparency Portal</span>
+          <span>{t.municipalTransparencyPortal}</span>
         </div>
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-          Browse Municipal Policies & Gazettes
+          {t.browsePolicies}
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 max-w-3xl">
-          Search and filter verified city council policies, zoning amendments, and transit corridors. Every policy includes plain language summaries and grounded citations.
+          {t.browsePoliciesDesc}
         </p>
       </div>
 
@@ -91,7 +100,7 @@ export const PoliciesPage: React.FC = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search keyword or code..."
+              placeholder={t.searchKeywordOrCode}
               className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
             />
           </div>
@@ -103,7 +112,7 @@ export const PoliciesPage: React.FC = () => {
             className="px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {categories.map((c) => (
-              <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>
+              <option key={c.id} value={c.id}>{c.label}</option>
             ))}
           </select>
 
@@ -114,7 +123,7 @@ export const PoliciesPage: React.FC = () => {
             className="px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {statuses.map((s) => (
-              <option key={s} value={s}>{s === 'All' ? 'All Statuses' : s}</option>
+              <option key={s.id} value={s.id}>{s.label}</option>
             ))}
           </select>
 
@@ -124,7 +133,7 @@ export const PoliciesPage: React.FC = () => {
             onChange={(e) => setSelectedWard(e.target.value)}
             className="px-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="All">All Wards</option>
+            <option value="All">{t.allWards}</option>
             {wards.map((w) => (
               <option key={w.ward_number} value={w.ward_number.toString()}>
                 Ward {w.ward_number} — {w.name}
@@ -135,14 +144,14 @@ export const PoliciesPage: React.FC = () => {
 
         {/* Filter Summary & Reset */}
         <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
-          <span>Found <strong>{policies.length}</strong> matching municipal policies</span>
+          <span>Found <strong>{policies.length}</strong> {t.foundPolicies}</span>
           {(selectedCategory !== 'All' || selectedStatus !== 'All' || selectedWard !== 'All' || searchTerm) && (
             <button
               onClick={resetFilters}
               className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800"
             >
               <RotateCcw className="w-3 h-3" />
-              Reset Filters
+              {t.resetFilters}
             </button>
           )}
         </div>
@@ -158,15 +167,15 @@ export const PoliciesPage: React.FC = () => {
       ) : policies.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
           <Filter className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="text-base font-bold text-slate-800">No policies found</h3>
+          <h3 className="text-base font-bold text-slate-800">{t.noPoliciesFound}</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            Try adjusting your search criteria or resetting filters to view all available municipal records.
+            {t.noPoliciesFoundDesc}
           </p>
           <button
             onClick={resetFilters}
             className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-700"
           >
-            Reset All Filters
+            {t.resetAllFilters}
           </button>
         </div>
       ) : (

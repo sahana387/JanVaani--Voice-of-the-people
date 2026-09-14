@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Polygon, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useApp } from '../context/AppContext';
 import { api } from '../services/api';
 import { Ward, Policy } from '../types';
 import { 
@@ -20,6 +21,7 @@ const STATIC_WARDS: Ward[] = [
 ];
 
 export const CivicMapPage: React.FC = () => {
+  const { t } = useApp();
   const [wards, setWards] = useState<Ward[]>(STATIC_WARDS);
   const [selectedWard, setSelectedWard] = useState<any>(STATIC_WARDS[0]);
   const [wardPolicies, setWardPolicies] = useState<any[]>([]);
@@ -99,13 +101,13 @@ export const CivicMapPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-200 text-xs font-semibold border border-blue-400/30">
             <Compass className="w-3.5 h-3.5 text-amber-400" />
-            <span>GIS Municipal Spatial Engine</span>
+            <span>{t.gisMunicipalEngine}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Interactive Civic Map
+            {t.interactiveCivicMap}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
-            Click on any municipal ward boundary or select from the list to see verified policy impacts, zoning allowances, and infrastructure corridors.
+            {t.interactiveCivicMapDesc}
           </p>
         </div>
 
@@ -117,7 +119,7 @@ export const CivicMapPage: React.FC = () => {
               activeLayer === 'all' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-200 hover:text-white'
             }`}
           >
-            All Layers
+            {t.allLayers}
           </button>
           <button
             onClick={() => setActiveLayer('zoning')}
@@ -125,7 +127,7 @@ export const CivicMapPage: React.FC = () => {
               activeLayer === 'zoning' ? 'bg-amber-400 text-slate-900 shadow-md' : 'text-slate-200 hover:text-white'
             }`}
           >
-            Zoning 24m Zones
+            {t.zoningZones}
           </button>
           <button
             onClick={() => setActiveLayer('transit')}
@@ -133,7 +135,7 @@ export const CivicMapPage: React.FC = () => {
               activeLayer === 'transit' ? 'bg-emerald-400 text-slate-900 shadow-md' : 'text-slate-200 hover:text-white'
             }`}
           >
-            Transit Corridors
+            {t.transitCorridors}
           </button>
         </div>
       </div>
@@ -183,7 +185,7 @@ export const CivicMapPage: React.FC = () => {
                         onClick={() => handleSelectWard(ward)}
                         className="text-[11px] font-bold text-blue-600 hover:underline pt-1 block"
                       >
-                        Inspect Impacted Policies →
+                        {t.inspectImpactedPolicies} →
                       </button>
                     </div>
                   </Popup>
@@ -218,7 +220,7 @@ export const CivicMapPage: React.FC = () => {
               <div className="border-b border-slate-100 pb-4 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-800 border border-blue-200">
-                    BBMP Ward {selectedWard.ward_number}
+                    {t.bbmpWard} {selectedWard.ward_number}
                   </span>
                   <span className="text-xs text-slate-500 font-medium">
                     Zone: {selectedWard.zone}
@@ -240,20 +242,20 @@ export const CivicMapPage: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Policies Affecting This Ward ({wardPolicies.length})
+                    {t.policiesAffectingWard} ({wardPolicies.length})
                   </h3>
                   <span className="text-[11px] text-blue-600 font-bold">
-                    Spatial Match
+                    {t.spatialMatch}
                   </span>
                 </div>
 
                 {loadingPolicies ? (
                   <div className="p-8 text-center text-xs text-slate-400 animate-pulse">
-                    Loading ward policy mappings...
+                    {t.loadingWardMappings}
                   </div>
                 ) : wardPolicies.length === 0 ? (
                   <div className="p-6 bg-slate-50 rounded-2xl text-center text-xs text-slate-500">
-                    No active municipal policy impacts recorded for this ward.
+                    {t.noActivePolicies}
                   </div>
                 ) : (
                   <div className="space-y-3 max-h-[310px] overflow-y-auto pr-1">
@@ -284,13 +286,13 @@ export const CivicMapPage: React.FC = () => {
                             to={`/citizen-response?policy_id=${pol.id}&ward=${encodeURIComponent(selectedWard.name)}`}
                             className="font-bold text-amber-700 hover:text-amber-900"
                           >
-                            Draft Response
+                            {t.draftResponse}
                           </Link>
                           <Link
                             to={`/policies/${pol.id}`}
                             className="font-bold text-blue-600 hover:underline flex items-center gap-0.5"
                           >
-                            View Details <ChevronRight className="w-3 h-3" />
+                            {t.viewDetails} <ChevronRight className="w-3 h-3" />
                           </Link>
                         </div>
                       </div>
@@ -302,7 +304,7 @@ export const CivicMapPage: React.FC = () => {
           ) : (
             <div className="p-12 text-center text-xs text-slate-400 space-y-2">
               <MapPin className="w-8 h-8 mx-auto text-slate-300" />
-              <p>Click any ward on the map to inspect its municipal impact details.</p>
+              <p>{t.clickWardToInspect}</p>
             </div>
           )}
 
@@ -311,7 +313,7 @@ export const CivicMapPage: React.FC = () => {
               to="/for-you"
               className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800"
             >
-              <span>Personalize My Ward Feed</span>
+              <span>{t.personalizeWardFeed}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

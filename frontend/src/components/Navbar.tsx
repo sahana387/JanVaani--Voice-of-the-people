@@ -13,15 +13,15 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
 
   const navLinks = [
-    { name: t.appName, path: '/', icon: Building2 },
-    { name: 'Policies', path: '/policies', icon: FileText },
-    { name: t.forYou, path: '/for-you', icon: Sparkles },
-    { name: 'Ask JanVaani', path: '/chat', icon: MessageSquare },
-    { name: 'Map', path: '/map', icon: Map },
-    { name: 'Compare', path: '/compare/1', icon: Scale },
-    { name: 'Public Sentiment', path: '/sentiment/1', icon: BarChart3 },
-    { name: 'Quadratic Voting', path: '/quadratic-voting', icon: UserCheck },
-    { name: 'Alerts', path: '/alerts', icon: Bell },
+    { name: t.navHome || t.appName, path: '/', icon: Building2 },
+    { name: t.navPolicies || 'Policies', path: '/policies', icon: FileText },
+    { name: t.navForYou || t.forYou, path: '/for-you', icon: Sparkles },
+    { name: t.navAskJanVaani || 'Ask JanVaani', path: '/chat', icon: MessageSquare },
+    { name: t.navMap || 'Map', path: '/map', icon: Map },
+    { name: t.navCompare || 'Compare', path: '/compare/1', icon: Scale },
+    { name: t.navSentiment || 'Public Sentiment', path: '/sentiment/1', icon: BarChart3 },
+    { name: t.navVoting || 'Quadratic Voting', path: '/quadratic-voting', icon: UserCheck },
+    { name: t.navAlerts || 'Alerts', path: '/alerts', icon: Bell },
   ];
 
   const languages: { code: Language; label: string }[] = [
@@ -38,13 +38,13 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-medium tracking-wide">
-              MUNICIPAL CIVIC TRANSPARENCY PLATFORM • BENGALURU MUNICIPAL PILOT
+              {t.topBannerText}
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-4 text-slate-300">
-            <span>Official Gazette Records Grounded</span>
+            <span>{t.topBannerGazette}</span>
             <span className="text-slate-500">|</span>
-            <span>RTI & Ward Committee Integration</span>
+            <span>{t.topBannerRti}</span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
                   {t.appName}
                 </span>
                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold border border-blue-200 uppercase">
-                  Gov AI
+                  {t.govAi}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium">
@@ -125,7 +125,7 @@ export const Navbar: React.FC = () => {
               title="Toggle role for prototype testing"
             >
               <Shield className={`w-3.5 h-3.5 ${userRole === 'admin' ? 'text-amber-600' : 'text-slate-500'}`} />
-              {userRole === 'admin' ? 'Admin Mode' : 'Citizen View'}
+              {userRole === 'admin' ? t.adminMode : t.citizenView}
             </button>
 
             {/* Admin Link if Admin */}
@@ -134,7 +134,7 @@ export const Navbar: React.FC = () => {
                 to="/admin"
                 className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-colors shadow-sm"
               >
-                Dashboard
+                {t.dashboard}
               </Link>
             )}
           </div>
@@ -188,7 +188,7 @@ export const Navbar: React.FC = () => {
               onClick={() => setUserRole(userRole === 'citizen' ? 'admin' : 'citizen')}
               className="text-xs px-3 py-1 rounded border border-slate-300 font-medium"
             >
-              {userRole === 'admin' ? 'Switch to Citizen' : 'Switch to Admin'}
+              {userRole === 'admin' ? t.switchToCitizen : t.switchToAdmin}
             </button>
           </div>
         </div>
